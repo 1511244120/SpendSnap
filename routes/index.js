@@ -6,11 +6,18 @@ const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync(__dirname + '/../data/db.json')
 const db = low(adapter)
 const shortid = require('shortid')
+const moment = require('moment');
+const AccountModel = require('../models/AccountModel');
 //tally book list
 /* GET home page. */
 router.get('/account', function(req, res, next) {
-  let accounts = db.get('accounts').value();
-  res.render('list', {accounts:accounts});
+  AccountModel.find().sort({time: -1}).then((data, err) =>{
+    if(err){
+      res.status(500).send('Failed to read data');
+      return;
+    }
+    res.render('list', {accounts:data, moment: moment});
+  })
 });
 
 router.get('/account/create', function(req, res, next){
@@ -18,15 +25,28 @@ router.get('/account/create', function(req, res, next){
 });
 
 router.post('/account', (req, res) =>{
-  let id = shortid.generate();
-  db.get('accounts').unshift({id:id, ...req.body}).write()
-  res.render('success', {msg: "Add Successfully~~", url: '/account'});
+  AccountModel.create({
+    ...req.body,
+    time: moment(req.body.time).toDate()
+  }).then((data, err) =>{
+    if(err){
+      console.log(err)
+      res.status(500).send('Failed to insert');
+      return;
+    }
+    res.render('success', {msg: "Add Successfully~~", url: '/account'});
+  }) 
 })
 
 router.get('/account/:id', (req, res) =>{
   let id = req.params.id;
-  db.get('accounts').remove({id:id}).write();
-  res.render('success', {msg: "Delete Successfully~~", url: '/account'});
+  AccountModel.deleteOne({_id:id}).then((data, err)=>{
+    if(err){
+      res.status(500).send('Failed to delete');
+      return;
+    }
+    res.render('success', {msg: "Delete Successfully~~", url: '/account'});
+  })
 })
 
 module.exports = router;
