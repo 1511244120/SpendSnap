@@ -1,13 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-const low = require('lowdb')
-const FileSync = require('lowdb/adapters/FileSync')
-const adapter = new FileSync(__dirname + '/../data/db.json')
-const db = low(adapter)
-const shortid = require('shortid')
 const moment = require('moment');
-const AccountModel = require('../models/AccountModel');
+const AccountModel = require('../../models/AccountModel');
 //tally book list
 /* GET home page. */
 router.get('/account', function(req, res, next) {
