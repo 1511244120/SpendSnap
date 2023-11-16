@@ -1,11 +1,19 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
 
 const moment = require('moment');
 const AccountModel = require('../../models/AccountModel');
+
+const checkLoginMiddleware = require('../../middlewares/checkLoginMiddleware');
+
+const router = express.Router();
+
 //tally book list
 /* GET home page. */
-router.get('/account', function(req, res, next) {
+router.get('/', (req, res)=>{
+  res.redirect('/account');
+})
+
+router.get('/account', checkLoginMiddleware, function(req, res, next) {
   AccountModel.find().sort({time: -1}).then((data, err) =>{
     if(err){
       res.status(500).send('Failed to read data');
@@ -15,11 +23,11 @@ router.get('/account', function(req, res, next) {
   })
 });
 
-router.get('/account/create', function(req, res, next){
+router.get('/account/create', checkLoginMiddleware, function(req, res, next){
   res.render('create'); 
 });
 
-router.post('/account', (req, res) =>{
+router.post('/account', checkLoginMiddleware, (req, res) =>{
   AccountModel.create({
     ...req.body,
     time: moment(req.body.time).toDate()
@@ -33,7 +41,7 @@ router.post('/account', (req, res) =>{
   }) 
 })
 
-router.get('/account/:id', (req, res) =>{
+router.get('/account/:id', checkLoginMiddleware, (req, res) =>{
   let id = req.params.id;
   AccountModel.deleteOne({_id:id}).then((data, err)=>{
     if(err){
