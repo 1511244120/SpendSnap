@@ -1,28 +1,32 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
 
+const jwt = require('jsonwebtoken');
+let checkTokenMiddleware = require('../../middlewares/checkTokenMiddleware');
+const router = express.Router();
 const moment = require('moment');
 const AccountModel = require('../../models/AccountModel');
+
 //tally book list
 /* GET home page. */
-router.get('/account', function(req, res, next) {
-  AccountModel.find().sort({time: -1}).then((data) =>{
-    res.json({
-        code: '0000',
-        msg: 'read successfully',
-        data: data
-    });
-  }).catch((err)=>{
-    res.json({
-        code: '1001',
-        msg: 'Failed to read',
-        data: null
+router.get('/account', checkTokenMiddleware, function(req, res, next) {
+    console.log(req.user);
+    AccountModel.find().sort({time: -1}).then((data) =>{
+      res.json({
+          code: '0000',
+          msg: 'read successfully',
+          data: data
+      });
+    }).catch((err)=>{
+      res.json({
+          code: '1001',
+          msg: 'Failed to read',
+          data: null
+      })
+      return;
     })
-    return;
-  })
 });
 
-router.post('/account', (req, res) =>{
+router.post('/account', checkTokenMiddleware, (req, res) =>{
   AccountModel.create({
     ...req.body,
     time: moment(req.body.time).toDate()
@@ -42,7 +46,7 @@ router.post('/account', (req, res) =>{
   })
 })
 
-router.delete('/account/:id', (req, res) =>{
+router.delete('/account/:id', checkTokenMiddleware, (req, res) =>{
   let id = req.params.id;
   AccountModel.deleteOne({_id:id}).then((data)=>{
     res.json({
@@ -59,7 +63,7 @@ router.delete('/account/:id', (req, res) =>{
   })
 })
 
-router.get('/account/:id', (req, res) =>{
+router.get('/account/:id', checkTokenMiddleware, (req, res) =>{
     let {id} = req.params;
 
     AccountModel.findById(id).then((data) =>{
@@ -77,7 +81,7 @@ router.get('/account/:id', (req, res) =>{
     })
 })
 
-router.patch('/account/:id', (req, res) =>{
+router.patch('/account/:id', checkTokenMiddleware, (req, res) =>{
     let {id} = req.params;
 
     AccountModel.updateOne({_id:id}, req.body).then((data) =>{
