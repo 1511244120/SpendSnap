@@ -11,7 +11,7 @@ router.post('/reg', (req, res)=>{
     UserModel.create({...req.body, password: md5(req.body.password)}).then((data) =>{
         res.render('success', {msg: 'Register Successfully', url:'/login'});
     }).catch((err)=>{
-        res.status(500).send('Register failed, please try again later');
+        res.status(500).send('Register failed, please do not enter empty username or password and try again later');
     })
 });
 
