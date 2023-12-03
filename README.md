@@ -31,7 +31,7 @@ $ npm start
 Then you can try the project out, happy coding!
 
 ---
-Some notes about the design of the Spendsnap project:
+Some notes about the design of the Spendsnap project
 - Enabled users to add detailed transaction entries, including spending amount, debit/credit information, timestamp, notes, and purchased items, also able to delete and display transaction list. 
 - Utilized sessions with 'express-session' to manage user sessions, employed JSON Web Tokens (JWT) to validate login credentials and provide secure access to API endpoints, ensuring a high level of security across the application.
 - Utilized Lowdb initially as a temporary storage solution to facilitate early development stages. Then migrated to MongoDB and Mongoose to create and manage object data models, ensuring a scalable and efficient database structure.
