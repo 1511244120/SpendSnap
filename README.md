@@ -9,6 +9,7 @@
 2. create C:\data\db directory, MongoDB will save data to this folder by default
 3. inside the bin folder of MongoDB, open the command terminal
 4. run the command mongod
+
 Then in port 27017, the MongoDB service should be running 
 
 ### Clone and start the project
@@ -19,9 +20,9 @@ $ git clone https://github.com/1511244120/SpendSnap.git
 ```
 **Change to the project**:
 ``` bash
-$cd GitHarbor
+$cd SpendSnap
 ```
-**Install the dependencie**:
+**Install the dependencies**:
 ``` bash
 $ npm install
 ```
